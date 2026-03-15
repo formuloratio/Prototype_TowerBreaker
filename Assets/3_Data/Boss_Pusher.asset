@@ -20,4 +20,4 @@ MonoBehaviour:
   maxSpeed: 3
   attackInterval: 3
   skillValue: 30
-  chestPrefab: {fileID: 0}
+  chestPrefab: {fileID: 1452010958473245941, guid: e7c864ef13b3dfc4da8a0676547c0f2d, type: 3}

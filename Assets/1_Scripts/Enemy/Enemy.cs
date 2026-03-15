@@ -73,7 +73,7 @@ public class Enemy : MonoBehaviour
     public void ActivateEnemy(EnemyTrigger trigger)
     {
         myTrigger = trigger; // 관리자 등록
-        if (currentState == EnemyState.Idle) StartCoroutine(StartAfterDelay(1f));
+        if (currentState == EnemyState.Idle) StartCoroutine(StartAfterDelay(0.5f));
     }
 
     private IEnumerator StartAfterDelay(float delayTime)

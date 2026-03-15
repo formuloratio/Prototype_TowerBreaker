@@ -90,8 +90,13 @@ public class BossEnemy : Enemy
         // 상자 드롭 로직 추가
         if (bossData.chestPrefab != null)
         {
-            Instantiate(bossData.chestPrefab, transform.position, Quaternion.identity);
-            Debug.Log("보스 상자 드롭!");
+            GameObject obj = Instantiate(bossData.chestPrefab, transform.position, Quaternion.identity);
+            DropChest chest = obj.GetComponent<DropChest>();
+
+            if (myTrigger != null && chest != null)
+            {
+                myTrigger.SetChest(chest); // ⭐ 트리거에 상자 등록
+            }
         }
 
         base.Die(); // 기존 죽음 로직(애니메이션, 파괴) 실행

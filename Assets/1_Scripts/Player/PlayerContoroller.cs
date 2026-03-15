@@ -227,21 +227,31 @@ public class PlayerController : MonoBehaviour
 
         anim.Play("Attack");
 
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+        int finalDamage = attackDamage + InventoryManager.Instance.GetTotalAttackBonus();
+
+        Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
 
         // 한 번이라도 적을 맞췄는지 체크 (중복 흔들림 방지)
-        if (hitEnemies.Length > 0 && AttackEffectsManager.Instance != null)
+        if (hitObjects.Length > 0 && AttackEffectsManager.Instance != null)
         {
             // ⭐ 화면만 0.1초 동안 흔듭니다.
             AttackEffectsManager.Instance.PlayScreenShake(0.1f, 0.15f);
         }
 
-        foreach (Collider2D enemyCollider in hitEnemies)
+        foreach (Collider2D col in hitObjects)
         {
-            Enemy enemy = enemyCollider.GetComponent<Enemy>();
+            // 1. 적(Enemy)인 경우
+            Enemy enemy = col.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.TakeDamage(attackDamage);
+                enemy.TakeDamage(finalDamage);
+            }
+
+            // 2. 상자(DropChest)인 경우 ⭐ 추가됨
+            DropChest chest = col.GetComponent<DropChest>();
+            if (chest != null)
+            {
+                chest.TakeDamage(finalDamage);
             }
         }
 

@@ -7,9 +7,12 @@ public class EnemyTrigger : MonoBehaviour
     public LayerMask enemyLayer;
 
     [Header("클리어 설정")]
-    public GameObject stageTransition; // 클리어시 활성화할 오브젝트
+    public GameObject stageTransition; // 클리어 시 활성화할 오브젝트
 
-    public List<Enemy> activeEnemies = new List<Enemy>();
+    [Header("실시간 상태")]
+    public List<Enemy> activeEnemies = new List<Enemy>();
+    public DropChest currentChest; // 현재 필드에 존재하는 상자 (없으면 null)
+
     private Collider2D triggerCollider;
     private bool isTriggered = false;
 
@@ -18,16 +21,17 @@ public class EnemyTrigger : MonoBehaviour
         triggerCollider = GetComponent<Collider2D>();
     }
 
-    // ⭐ 상위 오브젝트 활성화 시 호출되는 초기화 로직
-    private void OnEnable()
+    // 상위 오브젝트 활성화 시 초기화
+    private void OnEnable()
     {
-        isTriggered = false; // 트리거 작동 여부 초기화
-        activeEnemies.Clear(); // 관리 리스트 초기화
+        isTriggered = false;
+        activeEnemies.Clear();
+        currentChest = null; // 상자 참조 초기화
 
-        if (stageTransition != null)
-            stageTransition.SetActive(false); // 클리어 오브젝트 다시 숨김
+        if (stageTransition != null)
+            stageTransition.SetActive(false);
 
-        Debug.Log("EnemyTrigger 초기화 완료");
+        Debug.Log("EnemyTrigger 초기화 완료");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -40,20 +44,36 @@ public class EnemyTrigger : MonoBehaviour
             filter.SetLayerMask(enemyLayer);
             filter.useLayerMask = true;
 
-            List<Collider2D> enemiesInTrigger = new List<Collider2D>();
-            Physics2D.OverlapCollider(triggerCollider, filter, enemiesInTrigger);
+            List<Collider2D> results = new List<Collider2D>();
+            Physics2D.OverlapCollider(triggerCollider, filter, results);
 
-            foreach (Collider2D enemyCol in enemiesInTrigger)
+            foreach (Collider2D col in results)
             {
-                Enemy enemy = enemyCol.GetComponent<Enemy>();
+                // 1. 적(Enemy)인 경우 등록
+                Enemy enemy = col.GetComponent<Enemy>();
                 if (enemy != null)
                 {
                     enemy.ActivateEnemy(this);
                     activeEnemies.Add(enemy);
                 }
+
+                // 2. 이미 배치된 상자(DropChest)가 있는 경우 등록
+                DropChest chest = col.GetComponent<DropChest>();
+                if (chest != null)
+                {
+                    SetChest(chest);
+                }
             }
             CheckClearCondition();
         }
+    }
+
+    // 외부(보스 등)에서 상자가 생성되었을 때 호출할 함수
+    public void SetChest(DropChest chest)
+    {
+        currentChest = chest;
+        currentChest.RegisterTrigger(this);
+        Debug.Log("트리거에 보상 상자가 등록되었습니다.");
     }
 
     public void OnEnemyDestroyed(Enemy enemy)
@@ -65,15 +85,27 @@ public class EnemyTrigger : MonoBehaviour
         CheckClearCondition();
     }
 
-    private void CheckClearCondition() // 적이 모두 제거되었는지 확인
+    // 상자가 파괴되었을 때 호출될 함수
+    public void OnChestDestroyed()
     {
-        if (isTriggered && activeEnemies.Count == 0)
+        currentChest = null; // 상자 참조 제거
+        Debug.Log("상자가 파괴되어 클리어 조건을 다시 확인합니다.");
+        CheckClearCondition();
+    }
+
+    private void CheckClearCondition()
+    {
+        // ⭐ 적이 0마리이고, 상자도 없을 때만 클리어 처리
+        if (isTriggered && activeEnemies.Count == 0 && currentChest == null)
         {
             if (stageTransition != null)
             {
                 stageTransition.SetActive(true);
-                GameManager.Instance.CompleteStage(); // 스테이지 점수 증가
-                Debug.Log("스테이지 클리어! 다음 단계로 이동 준비 완료.");
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.CompleteStage();
+                }
+                Debug.Log("스테이지 클리어! 모든 적과 상자가 제거되었습니다.");
             }
         }
     }
