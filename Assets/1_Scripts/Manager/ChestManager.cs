@@ -29,7 +29,7 @@ public class ChestManager : MonoBehaviour
             return;
         }
 
-        // ⭐ GameManager를 통해 차감 및 자동 저장
+        // GameManager를 통해 차감 및 자동 저장
         GameManager.Instance.UpdateChestCount(-1);
         UpdateChestUI();
 
@@ -53,7 +53,7 @@ public class ChestManager : MonoBehaviour
         {
             EquipmentData reward = availableItems[Random.Range(0, availableItems.Count)];
 
-            // ⭐ AddItem 내부에서 자동으로 PlayerPrefs 저장됨
+            // AddItem 내부에서 자동으로 PlayerPrefs 저장됨
             InventoryManager.Instance.AddItem(reward);
 
             if (inventoryUI != null)

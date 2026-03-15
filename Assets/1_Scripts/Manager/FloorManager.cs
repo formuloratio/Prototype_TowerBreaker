@@ -16,7 +16,6 @@ public class FloorManager : MonoBehaviour
     {
         if (timelineDirector != null)
         {
-            // ⭐ 1. 타임라인이 스스로 시작되지 않도록 설정을 끄고 초기화
             timelineDirector.playOnAwake = false; // 자동 재생 방지
             timelineDirector.time = 0;            // 재생 위치를 처음으로 리셋
 
@@ -26,7 +25,6 @@ public class FloorManager : MonoBehaviour
 
     private IEnumerator FloorTransitionRoutine()
     {
-        // ⭐ 2. 명시적으로 타임라인 재생 시작
         timelineDirector.Play();
 
         // 타임라인 종료 0.1초 전까지 대기 계산
@@ -36,19 +34,15 @@ public class FloorManager : MonoBehaviour
 
         yield return new WaitForSeconds(waitTime);
 
-        // 3. 타임라인 끝나기 0.1초 전: 층 이동 및 초기화 로직 실행
         MoveAndResetFloor();
 
-        // 4. 남은 0.1초 동안 마저 대기
         yield return new WaitForSeconds(0.1f);
 
-        // ⭐ 5. 재생이 완료된 후 다음 번을 위해 정지 (시간은 OnEnable에서 다시 0으로 잡음)
         timelineDirector.Stop();
 
         Debug.Log($"스테이지 {GameManager.Instance.currentStage} 세팅 완료. 매니저를 비활성화합니다.");
 
-        // 6. 매니저 오브젝트를 스스로 비활성화
-        // 비활성화되어도 activeFloors 리스트의 변경된 데이터는 메모리에 그대로 유지됩니다.
+        // 매니저 오브젝트를 스스로 비활성화
         this.gameObject.SetActive(false);
     }
 

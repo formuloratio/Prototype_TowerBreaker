@@ -31,7 +31,6 @@ public class AttackEffectsManager : MonoBehaviour
         }
     }
 
-    // ⭐ 이제 화면 흔들림 정보만 받습니다.
     public void PlayScreenShake(float duration, float magnitude)
     {
         if (mainCameraTransform == null) return;

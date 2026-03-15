@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 
-// 에디터의 우클릭 메뉴에서 쉽게 생성할 수 있도록 속성 추가
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "ScriptableObjects/EnemyData", order = 1)]
 public class EnemyData : ScriptableObject
 {
     [Header("외형 설정")]
-    public GameObject enemyVisualPrefab; // ⭐ 적의 이미지와 애니메이터가 담긴 프리팹
+    public GameObject enemyVisualPrefab;
 
     [Header("기본 정보")]
     public string enemyName = "일반 적";

@@ -11,7 +11,7 @@ public class EnemyTrigger : MonoBehaviour
 
     [Header("실시간 상태")]
     public List<Enemy> activeEnemies = new List<Enemy>();
-    public DropChest currentChest; // 현재 필드에 존재하는 상자 (없으면 null)
+    public DropChest currentChest; // 현재 필드에 존재하는 상자
 
     private Collider2D triggerCollider;
     private bool isTriggered = false;
@@ -21,7 +21,7 @@ public class EnemyTrigger : MonoBehaviour
         triggerCollider = GetComponent<Collider2D>();
     }
 
-    // 상위 오브젝트 활성화 시 초기화
+    // 오브젝트 활성화 시 초기화하기 위함
     private void OnEnable()
     {
         isTriggered = false;
@@ -49,7 +49,6 @@ public class EnemyTrigger : MonoBehaviour
 
             foreach (Collider2D col in results)
             {
-                // 1. 적(Enemy)인 경우 등록
                 Enemy enemy = col.GetComponent<Enemy>();
                 if (enemy != null)
                 {
@@ -57,7 +56,6 @@ public class EnemyTrigger : MonoBehaviour
                     activeEnemies.Add(enemy);
                 }
 
-                // 2. 이미 배치된 상자(DropChest)가 있는 경우 등록
                 DropChest chest = col.GetComponent<DropChest>();
                 if (chest != null)
                 {
@@ -68,7 +66,7 @@ public class EnemyTrigger : MonoBehaviour
         }
     }
 
-    // 외부(보스 등)에서 상자가 생성되었을 때 호출할 함수
+    // 외부에서 상자가 생성되었을 때 호출할 함수
     public void SetChest(DropChest chest)
     {
         currentChest = chest;
@@ -95,7 +93,7 @@ public class EnemyTrigger : MonoBehaviour
 
     private void CheckClearCondition()
     {
-        // ⭐ 적이 0마리이고, 상자도 없을 때만 클리어 처리
+        // 적이 0마리이고 상자도 없을 때만 클리어 처리
         if (isTriggered && activeEnemies.Count == 0 && currentChest == null)
         {
             if (stageTransition != null)

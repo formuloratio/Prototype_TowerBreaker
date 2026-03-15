@@ -11,11 +11,11 @@ public class BossEnemy : Enemy
 
     [Header("보스 설정")]
     public BossType bossType;
-    protected BossData bossData; // 상속받은 데이터 캐스팅용
+    protected BossData bossData;
     private float attackTimer;
 
-    private GameObject player; // 플레이어 참조
-    private Rigidbody2D playerRb; // 플레이어 Rigidbody2D 참조
+    private GameObject player;
+    private Rigidbody2D playerRb;
 
     protected override void Start()
     {
@@ -80,8 +80,7 @@ public class BossEnemy : Enemy
                 // 나 자신을 제외하고 살아있는 아군만 체크
                 if (ally != null && ally != this && ally.currentState != EnemyState.Dead)
                 {
-                    // ⭐ [핵심 로직] 현재 체력 + 힐량과 최대 체력 중 더 작은 값을 선택
-                    // 이렇게 하면 최대 체력을 절대 넘지 않습니다.
+                    // 최대 체력 넘지 않게
                     int maxHP = ally.enemyData.maxHP;
                     ally.currentHP = Mathf.Min(ally.currentHP + healAmount, maxHP);
 
@@ -101,11 +100,11 @@ public class BossEnemy : Enemy
 
             if (myTrigger != null && chest != null)
             {
-                myTrigger.SetChest(chest); // ⭐ 트리거에 상자 등록
+                myTrigger.SetChest(chest); // 트리거에 상자 등록
             }
         }
 
         SoundEvents.NotifySfx(chestDropSfx);
-        base.Die(); // 기존 죽음 로직(애니메이션, 파괴) 실행
+        base.Die(); // 기존 죽음 로직 실행
     }
 }

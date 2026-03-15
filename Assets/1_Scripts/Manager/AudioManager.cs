@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour
 {
@@ -10,7 +9,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource bgmSource;
     public AudioSource sfxSource;
 
-    [Header("오디오 클립 데이터 (인스펙터에서 할당)")]
+    [Header("오디오 클립 데이터")]
     public AudioClip bgmClip;
     public AudioClip attackClickSfx;
     public AudioClip hitSfx;
@@ -40,15 +39,14 @@ public class AudioManager : MonoBehaviour
         PlayBGM(bgmClip);
     }
 
-    // ⭐ 이벤트 구독 (활성화될 때)
+    // 이벤트 구독
     private void OnEnable()
     {
-        // SoundEvents라는 스태틱 클래스를 만들어 관리하면 편리합니다.
         SoundEvents.OnSfxPlay += PlaySFX;
         SoundEvents.OnBgmChange += PlayBGM;
     }
 
-    // ⭐ 이벤트 해제 (비활성화될 때 - 메모리 누수 방지)
+    // 이벤트 해제
     private void OnDisable()
     {
         SoundEvents.OnSfxPlay -= PlaySFX;
@@ -70,12 +68,12 @@ public class AudioManager : MonoBehaviour
     }
 }
 
-// ⭐ 이벤트를 전역에서 쏠 수 있게 해주는 중계소 클래스
+// 이벤트를 전역에서 쓸 수 있게   
 public static class SoundEvents
 {
     public static Action<AudioClip> OnSfxPlay;
     public static Action<AudioClip> OnBgmChange;
 
-    // 편의를 위해 "알림" 함수 생성
+    // 편의를 위해 알림 함수 생성
     public static void NotifySfx(AudioClip clip) => OnSfxPlay?.Invoke(clip);
 }

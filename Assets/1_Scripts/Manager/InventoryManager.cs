@@ -11,7 +11,6 @@ public class InventoryManager : MonoBehaviour
 
     private void Awake()
     {
-        // DontDestroyOnLoad를 제거했습니다. 씬마다 새로 생성되지만 데이터는 불러옵니다.
         Instance = this;
         LoadInventory();
     }
@@ -30,7 +29,7 @@ public class InventoryManager : MonoBehaviour
     public void EquipItem(string id)
     {
         equippedItemID = id;
-        SaveInventory(); // 즉시 저장
+        SaveInventory();
     }
 
     // 장착 해제 시 호출
@@ -47,18 +46,18 @@ public class InventoryManager : MonoBehaviour
         return item != null ? item.attackBonus : 0;
     }
 
-    // ⭐ PlayerPrefs 저장 로직
+    // PlayerPrefs 저장 로직
     public void SaveInventory()
     {
-        // 리스트를 "ID1,ID2" 형태의 문자열로 변환하여 저장
+        // 리스트를 문자열로 변환하여 저장
         string joinedIDs = string.Join(",", ownedItemIDs);
         PlayerPrefs.SetString("OwnedItems", joinedIDs);
         PlayerPrefs.SetString("EquippedItem", equippedItemID);
-        PlayerPrefs.Save(); // 디스크에 즉시 물리적 저장
+        PlayerPrefs.Save(); // 디스크에 즉시 저장
         Debug.Log("인벤토리 데이터가 PlayerPrefs에 저장되었습니다.");
     }
 
-    // ⭐ PlayerPrefs 불러오기 로직
+    // PlayerPrefs 불러오기 로직
     private void LoadInventory()
     {
         string savedItems = PlayerPrefs.GetString("OwnedItems", "");

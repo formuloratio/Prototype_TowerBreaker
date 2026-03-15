@@ -13,12 +13,12 @@ public class Enemy : MonoBehaviour
     public EnemyState currentState = EnemyState.Idle;
 
     public Animator anim;
-    protected EnemyTrigger myTrigger; // ⭐ 나를 관리하는 트리거 저장
+    protected EnemyTrigger myTrigger;
 
     [HideInInspector] public int currentHP;
     private Rigidbody2D rb;
     private float currentSpeed;
-    private bool isKnockbacked = false; // ⭐ 스스로 상태를 제어하기 위한 변수
+    private bool isKnockbacked = false;
 
     protected virtual void Start()
     {
@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
-        // ⭐ 넉백 중이 아닐 때만 이동 로직 수행
+        // 넉백 중이 아닐 때만 이동 로직 수행
         if (currentState == EnemyState.Start && !isKnockbacked)
         {
             MoveLeftWithAcceleration();
@@ -46,20 +46,20 @@ public class Enemy : MonoBehaviour
         rb.velocity = new Vector2(-currentSpeed, rb.velocity.y);
     }
 
-    // ⭐ 플레이어로부터 "밀려나라"는 요청을 받으면 실행됨
+    // 플레이어로부터 요청을 받으면 실행됨
     public void ApplyKnockback(float force)
     {
         if (currentState == EnemyState.Dead) return;
 
-        // 1. 기존 이동 루틴 및 속도 초기화
+        // 기존 이동 루틴 및 속도 초기화
         StopAllCoroutines();
         rb.velocity = Vector2.zero;
         currentSpeed = enemyData.initialSpeed;
 
-        // 2. 넉백 물리 적용 (스스로에게 힘을 가함)
+        // 넉백 물리 적용
         rb.AddForce(Vector2.right * force, ForceMode2D.Impulse);
 
-        // 3. 넉백 제어 코루틴 시작
+        // 넉백 제어 코루틴 시작
         StartCoroutine(KnockbackRoutine());
     }
 
@@ -67,7 +67,6 @@ public class Enemy : MonoBehaviour
     {
         isKnockbacked = true; // 이동 로직 잠금
 
-        // 0.2초간 물리 엔진이 AddForce의 결과를 온전히 처리하도록 대기
         yield return new WaitForSeconds(0.2f);
 
         isKnockbacked = false; // 이동 로직 해제
@@ -75,7 +74,7 @@ public class Enemy : MonoBehaviour
 
     public void ActivateEnemy(EnemyTrigger trigger)
     {
-        myTrigger = trigger; // 관리자 등록
+        myTrigger = trigger;
         if (currentState == EnemyState.Idle) StartCoroutine(StartAfterDelay(0.5f));
     }
 
@@ -99,20 +98,19 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Die()
     {
-        // 1. 상태를 즉시 Dead로 변경
         currentState = EnemyState.Dead;
         SoundEvents.NotifySfx(deathSfx);
-        // ⭐ 죽기 전에 트리거에게 나 죽었다고 알림
+
+        // 죽기 전에 트리거에게 알림
         if (myTrigger != null)
         {
             myTrigger.OnEnemyDestroyed(this);
         }
 
-        // 2. 물리 속도 정지
+        // 물리 속도 정지
         if (rb != null) rb.velocity = Vector2.zero;
 
-        // ⭐ 3. 콜라이더 즉시 비활성화 (물리 판정 제거)
-        // 적에게 붙어있는 모든 종류의 Collider2D를 찾아 꺼버립니다.
+        // 콜라이더 즉시 비활성화
         Collider2D col = GetComponent<Collider2D>();
         if (col != null)
         {

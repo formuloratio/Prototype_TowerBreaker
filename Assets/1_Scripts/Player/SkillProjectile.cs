@@ -21,12 +21,10 @@ public class SkillProjectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 적 레이어 혹은 Enemy 스크립트 확인
         Enemy enemy = collision.GetComponent<Enemy>();
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
-            // 이펙트 생성 로직 추가 가능
         }
     }
 }

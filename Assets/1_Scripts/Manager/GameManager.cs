@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour
         Debug.Log($"스테이지 저장 완료: {currentStage}");
     }
 
-    // 상자 개수 변경 시 공용으로 사용할 함수
     public void UpdateChestCount(int amount)
     {
         totalChests += amount;

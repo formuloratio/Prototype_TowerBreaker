@@ -63,7 +63,7 @@ public class DropChest : MonoBehaviour
         SoundEvents.NotifySfx(chestBreakSfx);
         isDead = true;
 
-        // 1. 데이터 저장 로직
+        // 데이터 저장 로직
         if (GameManager.Instance != null)
         {
             GameManager.Instance.totalChests += 1;
@@ -71,7 +71,7 @@ public class DropChest : MonoBehaviour
             PlayerPrefs.Save();
         }
 
-        // 2. 트리거에 알림
+        // 트리거에 알림
         if (myTrigger != null)
         {
             myTrigger.OnChestDestroyed();
