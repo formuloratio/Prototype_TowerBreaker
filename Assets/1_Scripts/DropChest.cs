@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class DropChest : MonoBehaviour
 {
+    public AudioClip chestHitSfx;
+    public AudioClip chestBreakSfx;
+
     [Header("상자 설정")]
     public int hp = 50;
     public string saveKey = "SavedChestCount";
@@ -31,6 +34,7 @@ public class DropChest : MonoBehaviour
     {
         if (isDead) return;
 
+        SoundEvents.NotifySfx(chestHitSfx);
         hp -= damage;
 
         // 피격 시 빨간색 반짝임
@@ -56,6 +60,7 @@ public class DropChest : MonoBehaviour
     private void Die()
     {
         if (isDead) return;
+        SoundEvents.NotifySfx(chestBreakSfx);
         isDead = true;
 
         // 1. 데이터 저장 로직

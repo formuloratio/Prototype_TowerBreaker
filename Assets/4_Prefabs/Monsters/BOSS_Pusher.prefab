@@ -5350,10 +5350,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d222ee697e1553b4c95ffee0484e68b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitSfx: {fileID: 8300000, guid: 8b23b175a78d6b5458322e3a6c9905d0, type: 3}
+  deathSfx: {fileID: 8300000, guid: ba39bf8baf6d13046889b2d64822381a, type: 3}
   enemyData: {fileID: 11400000, guid: 1cff98552f5c46546b97161306b2456f, type: 2}
   currentState: 0
   anim: {fileID: 5360759009447079198}
   currentHP: 0
+  pushSfx: {fileID: 8300000, guid: 21c4a490b24ba2045bc815f7626a40ef, type: 3}
+  healSfx: {fileID: 8300000, guid: cfce0cea076109f478783201b2a9f57f, type: 3}
+  chestDropSfx: {fileID: 8300000, guid: c5cb2ac29e89dbf43a9b644caaad45e6, type: 3}
   bossType: 0
 --- !u!50 &7040302119410198216
 Rigidbody2D:

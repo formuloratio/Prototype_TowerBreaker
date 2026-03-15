@@ -5,6 +5,10 @@ public enum BossType { Pusher, Healer }
 
 public class BossEnemy : Enemy
 {
+    public AudioClip pushSfx;
+    public AudioClip healSfx;
+    public AudioClip chestDropSfx;
+
     [Header("보스 설정")]
     public BossType bossType;
     protected BossData bossData; // 상속받은 데이터 캐스팅용
@@ -53,6 +57,7 @@ public class BossEnemy : Enemy
 
         if (player != null)
         {
+            SoundEvents.NotifySfx(pushSfx);
             // 플레이어를 왼쪽으로 강하게 밀침
             playerRb.AddForce(Vector2.left * bossData.skillValue, ForceMode2D.Impulse);
             Debug.Log("보스가 플레이어를 밀쳐냈습니다!");
@@ -63,6 +68,7 @@ public class BossEnemy : Enemy
     private IEnumerator HealerSkill()
     {
         yield return new WaitForSeconds(0.5f);
+        SoundEvents.NotifySfx(healSfx);
 
         if (myTrigger != null)
         {
@@ -99,6 +105,7 @@ public class BossEnemy : Enemy
             }
         }
 
+        SoundEvents.NotifySfx(chestDropSfx);
         base.Die(); // 기존 죽음 로직(애니메이션, 파괴) 실행
     }
 }

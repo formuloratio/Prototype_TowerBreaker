@@ -13,6 +13,9 @@ public enum PlayerStateEnum
 
 public class PlayerController : MonoBehaviour
 {
+    public AudioClip attackClickSfx;
+    public AudioClip defendSuccessSfx;
+
     [Header("컴포넌트")]
     public Animator anim;
     public Rigidbody2D rb;
@@ -105,7 +108,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // 공격 코루틴 시작
+        SoundEvents.NotifySfx(attackClickSfx);
         StartCoroutine(AttackRoutine());
     }
 
@@ -193,6 +196,9 @@ public class PlayerController : MonoBehaviour
         // ⭐ 해당 트리거 구역 내의 모든 적을 한꺼번에 넉백
         if (currentEnemyTrigger != null && currentEnemyTrigger.activeEnemies.Count > 0)
         {
+            // 2. 방어 성공(넉백 발생) 시 사운드
+            SoundEvents.NotifySfx(defendSuccessSfx);
+
             for (int i = currentEnemyTrigger.activeEnemies.Count - 1; i >= 0; i--)
             {
                 Enemy enemy = currentEnemyTrigger.activeEnemies[i];

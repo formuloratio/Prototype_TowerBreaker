@@ -9,18 +9,19 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("스폰 설정")]
     public float xInterval = 1.4f; // 적 간의 X축 간격
+    public int maxEnemyCount = 20; // ⭐ 최대 스폰 제한 수치
 
     public GameManager gameManagerObj;
 
     protected virtual void OnEnable()
     {
-        // ⭐ 1. 기존에 생성되어 자식으로 붙어있던 적들을 모두 제거 (초기화)
+        // 1. 기존에 생성되어 자식으로 붙어있던 적들을 모두 제거 (초기화)
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
 
-        // ⭐ 2. 현재 GameManager의 스테이지 값을 반영하여 새로 생성
+        // 2. 현재 GameManager의 스테이지 값을 반영하여 새로 생성
         SpawnEnemies();
     }
 
@@ -32,8 +33,11 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
 
-        int enemyCount = 6 + (gameManagerObj.currentStage - 1);
-        Debug.Log($"[일반몹] 생성 시도 마릿수: {enemyCount} (현재 스테이지: {gameManagerObj.currentStage})");
+        // ⭐ 스테이지에 따른 마릿수 계산 후, 최대치(20)로 제한
+        int calculatedCount = 6 + (gameManagerObj.currentStage - 1);
+        int enemyCount = Mathf.Min(calculatedCount, maxEnemyCount);
+
+        Debug.Log($"[일반몹] 생성 시도 마릿수: {enemyCount} (계산값: {calculatedCount}, 최대제한: {maxEnemyCount})");
 
         for (int i = 0; i < enemyCount; i++)
         {
@@ -42,12 +46,13 @@ public class EnemySpawner : MonoBehaviour
 
             if (selectedPrefab != null)
             {
+                // 생성 시 transform을 부모로 설정하여 관리 용이하게 함
                 GameObject obj = Instantiate(selectedPrefab, spawnPos, Quaternion.identity, transform);
                 Debug.Log($"[일반몹] {i + 1}번째 적 생성 성공: {obj.name}");
             }
             else
             {
-                Debug.LogError($"[일반몹] {i + 1}번째 생성 실패: 선택된 프리팹이 NULL입니다. 인스펙터를 확인하세요!");
+                Debug.LogError($"[일반몹] {i + 1}번째 생성 실패: 선택된 프리팹이 NULL입니다.");
             }
         }
     }

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PlayerSkillManager : MonoBehaviour
 {
+    public AudioClip skill1Sfx;
+    public AudioClip skill2Sfx;
+    public AudioClip skill3Sfx;
+
     [Header("참조 설정")]
     public PlayerController player;
 
@@ -32,6 +36,7 @@ public class PlayerSkillManager : MonoBehaviour
     {
         if (Time.time < lastSkill1Time + skill1Cooldown) return;
         if (player.currentState != PlayerStateEnum.Idle) return;
+        SoundEvents.NotifySfx(skill1Sfx);
 
         lastSkill1Time = Time.time;
         Debug.Log("스킬 1: 대지진 발동!");
@@ -62,6 +67,8 @@ public class PlayerSkillManager : MonoBehaviour
         if (Time.time < lastSkill2Time + skill2Cooldown) return;
         if (player.currentState != PlayerStateEnum.Idle) return;
 
+        SoundEvents.NotifySfx(skill2Sfx);
+
         lastSkill2Time = Time.time;
         Debug.Log("스킬 2: 신풍 발사!");
 
@@ -83,6 +90,7 @@ public class PlayerSkillManager : MonoBehaviour
         if (player.currentState != PlayerStateEnum.Idle) return;
 
         lastSkill3Time = Time.time; // 쿨타임 변수 수정
+        SoundEvents.NotifySfx(skill3Sfx);
         Debug.Log("스킬 3: 불굴의 의지! 5초간 제자리에 고정됩니다.");
 
         StartCoroutine(UnstoppableRoutine(5f));

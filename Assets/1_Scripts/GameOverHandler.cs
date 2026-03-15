@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GameOverHandler : MonoBehaviour
 {
+    public AudioClip gameOverSfx;
+
     [Header("참조 설정")]
     public GameObject freezingEffect;    // 1순위: 활성화될 Freezing 오브젝트
     public GameObject gameOverUI;       // 2순위: 2초 후 뜰 게임오버 창
@@ -24,6 +26,8 @@ public class GameOverHandler : MonoBehaviour
 
     private IEnumerator GameOverSequence(GameObject player)
     {
+        SoundEvents.NotifySfx(gameOverSfx);
+
         // ⭐ [단계 1] 플레이어를 빨갛게 물들임
         SpriteRenderer sr = player.GetComponentInChildren<SpriteRenderer>();
         if (sr != null)

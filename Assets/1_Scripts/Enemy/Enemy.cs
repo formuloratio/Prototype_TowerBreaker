@@ -5,6 +5,9 @@ public enum EnemyState { Idle, Start, Dead }
 
 public class Enemy : MonoBehaviour
 {
+    public AudioClip hitSfx;
+    public AudioClip deathSfx;
+
     [Header("적 데이터 설정")]
     public EnemyData enemyData;
     public EnemyState currentState = EnemyState.Idle;
@@ -86,8 +89,11 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage)
     {
         if (currentState == EnemyState.Dead) return;
+
+        SoundEvents.NotifySfx(hitSfx);
         anim.SetTrigger("3_Damaged");
         currentHP -= damage;
+
         if (currentHP <= 0) Die();
     }
 
@@ -95,7 +101,7 @@ public class Enemy : MonoBehaviour
     {
         // 1. 상태를 즉시 Dead로 변경
         currentState = EnemyState.Dead;
-
+        SoundEvents.NotifySfx(deathSfx);
         // ⭐ 죽기 전에 트리거에게 나 죽었다고 알림
         if (myTrigger != null)
         {
